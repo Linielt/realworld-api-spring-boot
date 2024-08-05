@@ -6,7 +6,10 @@ import com.linielt.realworldapispringboot.request.UserLoginRequest;
 import com.linielt.realworldapispringboot.request.UserRegistrationRequest;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
+
+import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
@@ -30,5 +33,10 @@ public class UserService {
         var user = User.fromRegistrationRequest(registrationRequest);
         user.encryptPassword(registrationRequest.getPassword(), passwordEncoder);
         return repository.save(user);
+    }
+
+    public User getCurrentUser(JwtAuthenticationToken jwtToken) {
+        return repository.findUserById(Integer.parseInt(jwtToken.getName()))
+                .orElseThrow(NoSuchElementException::new);
     }
 }

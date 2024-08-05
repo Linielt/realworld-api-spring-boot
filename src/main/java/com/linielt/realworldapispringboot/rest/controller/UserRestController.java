@@ -8,6 +8,8 @@ import com.linielt.realworldapispringboot.service.JwtTokenProviderService;
 import com.linielt.realworldapispringboot.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,5 +41,13 @@ public class UserRestController {
         var userDto = userMapper.toUserDto(registeredUser);
         userDto.setToken(tokenProviderService.generateToken(registeredUser));
         return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/user")
+    public UserDto getCurrentUser(JwtAuthenticationToken jwtToken) {
+        var currentUser = userService.getCurrentUser(jwtToken);
+        var userDto = userMapper.toUserDto(currentUser);
+        userDto.setToken(jwtToken.getToken().getTokenValue());
+        return userDto;
     }
 }

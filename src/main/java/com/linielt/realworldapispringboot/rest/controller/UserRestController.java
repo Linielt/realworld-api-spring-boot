@@ -4,15 +4,13 @@ import com.linielt.realworldapispringboot.dtos.UserDto;
 import com.linielt.realworldapispringboot.mapper.UserMapper;
 import com.linielt.realworldapispringboot.request.UserLoginRequest;
 import com.linielt.realworldapispringboot.request.UserRegistrationRequest;
+import com.linielt.realworldapispringboot.request.UserUpdateRequest;
 import com.linielt.realworldapispringboot.service.JwtTokenProviderService;
 import com.linielt.realworldapispringboot.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserRestController {
@@ -47,6 +45,14 @@ public class UserRestController {
     public UserDto getCurrentUser(JwtAuthenticationToken jwtToken) {
         var currentUser = userService.getCurrentUser(jwtToken);
         var userDto = userMapper.toUserDto(currentUser);
+        userDto.setToken(jwtToken.getToken().getTokenValue());
+        return userDto;
+    }
+
+    @PatchMapping("/user")
+    public UserDto updateCurrentUser(JwtAuthenticationToken jwtToken, @RequestBody UserUpdateRequest updateRequest) {
+        var updatedUser = userService.updateCurrentUser(jwtToken, updateRequest);
+        var userDto = userMapper.toUserDto(updatedUser);
         userDto.setToken(jwtToken.getToken().getTokenValue());
         return userDto;
     }

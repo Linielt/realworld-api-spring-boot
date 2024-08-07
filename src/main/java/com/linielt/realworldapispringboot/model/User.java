@@ -30,7 +30,7 @@ public class User {
                 registrationRequest.getPassword());
     }
 
-    public void encryptPassword(String rawPassword, PasswordEncoder passwordEncoder) {
+    public void encryptAndSetPassword(String rawPassword, PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(rawPassword);
     }
 
@@ -56,5 +56,29 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

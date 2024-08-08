@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName("user")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
-public class ProfileDto {
+public class ProfileDto { // TODO - Might be repeating myself, will later check if this class is necessary.
 
     private String username;
     private String bio;

@@ -4,6 +4,9 @@ import com.linielt.realworldapispringboot.request.UserRegistrationRequest;
 import jakarta.persistence.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Table(name = "users")
 @Entity
 public class User {
@@ -16,6 +19,15 @@ public class User {
     private String bio;
     private String image;
     private String password;
+
+    @JoinTable(
+            name = "user_follows",
+            joinColumns = @JoinColumn(name = "follower_user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "followed_user_id", referencedColumnName = "id")
+
+    )
+    @OneToMany(cascade = CascadeType.REMOVE)
+    private Set<User> followedUsers = new HashSet<>();
 
     protected User() {}
 
@@ -80,5 +92,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isFollowing(User user) {
+        return this.followedUsers.contains(user);
+    }
+
+    public User followUser(User user) {
+        followedUsers.add(user);
+        return this;
     }
 }

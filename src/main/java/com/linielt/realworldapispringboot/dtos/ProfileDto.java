@@ -5,28 +5,12 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName("user")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
-public class UserDto {
-    private String email;
-    private String token;
+public class ProfileDto {
+
     private String username;
     private String bio;
     private String image;
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
+    private boolean following;
 
     public String getUsername() {
         return username;
@@ -50,5 +34,13 @@ public class UserDto {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public boolean isFollowing() {
+        return following;
+    }
+
+    public void setFollowing(boolean following) {
+        this.following = following;
     }
 }

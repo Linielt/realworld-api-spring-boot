@@ -39,6 +39,17 @@ public class ProfileService {
                 .orElseThrow(NoSuchElementException::new);
 
         userRepository.save(currentUser.followUser(targetUser));
-        return ProfileDto.fromUser(targetUser, true);
+        return ProfileDto.fromUser(targetUser, currentUser.isFollowing(targetUser));
+    }
+
+    @Transactional
+    public ProfileDto unfollowProfile(JwtAuthenticationToken jwtToken, String username) {
+        var currentUser = userRepository.findUserById(Integer.parseInt(jwtToken.getName()))
+                .orElseThrow(NoSuchElementException::new);
+        var targetUser = userRepository.findUserByUsername(username)
+                .orElseThrow(NoSuchElementException::new);
+
+        userRepository.save(currentUser.unfollowUser(targetUser));
+        return ProfileDto.fromUser(targetUser, currentUser.isFollowing(targetUser));
     }
 }

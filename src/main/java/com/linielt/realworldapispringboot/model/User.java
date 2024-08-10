@@ -102,4 +102,9 @@ public class User {
         followedUsers.add(user);
         return this;
     }
+
+    public User unfollowUser(User user) {
+        followedUsers.remove(user);
+        return user;
+    }
 }

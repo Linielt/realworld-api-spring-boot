@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.linielt.realworldapispringboot.model.User;
 
-@JsonTypeName("user")
+@JsonTypeName("profile")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
 public class ProfileDto { // TODO - Might be repeating myself, will later check if this class is necessary.
 

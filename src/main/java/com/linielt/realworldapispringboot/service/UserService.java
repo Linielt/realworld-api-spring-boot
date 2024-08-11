@@ -36,9 +36,14 @@ public class UserService {
         return repository.save(user);
     }
 
-    public User getCurrentUser(JwtAuthenticationToken jwtToken) {
+    public User getUserByToken(JwtAuthenticationToken jwtToken) {
         return repository.findUserById(Integer.parseInt(jwtToken.getName()))
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new NoSuchElementException("User could not be found."));
+    }
+
+    public User getUserByUsername(String username) {
+        return repository.findUserByUsername(username)
+                .orElseThrow(() -> new NoSuchElementException("User could not be found."));
     }
 
     // TODO - Allow for user to set fields to null

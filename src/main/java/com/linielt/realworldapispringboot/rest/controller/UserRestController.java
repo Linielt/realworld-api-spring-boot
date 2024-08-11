@@ -38,7 +38,7 @@ public class UserRestController {
 
     @GetMapping("/user")
     public UserDto getCurrentUser(JwtAuthenticationToken jwtToken) {
-        var currentUser = userService.getCurrentUser(jwtToken);
+        var currentUser = userService.getUserByToken(jwtToken);
         return UserDto.fromUserAndTokenValueToDto(currentUser, jwtToken.getToken().getTokenValue());
     }
 

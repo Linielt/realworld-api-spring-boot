@@ -2,6 +2,8 @@ package com.linielt.realworldapispringboot.dtos;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.linielt.realworldapispringboot.model.User;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 @JsonTypeName("user")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
@@ -11,6 +13,20 @@ public class UserDto {
     private String username;
     private String bio;
     private String image;
+
+    public static UserDto fromUserAndTokenValueToDto(User user, String jwtTokenValue) {
+        return new UserDto(user.getEmail(), jwtTokenValue, user.getUsername(), user.getBio(), user.getImage());
+    }
+
+    protected UserDto() {}
+
+    private UserDto(String email, String token, String username, String bio, String image) {
+        this.email = email;
+        this.token = token;
+        this.username = username;
+        this.bio = bio;
+        this.image = image;
+    }
 
     public String getEmail() {
         return email;

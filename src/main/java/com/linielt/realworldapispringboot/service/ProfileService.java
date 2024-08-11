@@ -17,8 +17,8 @@ public class ProfileService {
         this.userRepository = userRepository;
     }
 
-    public ProfileDto getProfileFromUsername(JwtAuthenticationToken jwtToken, String username) {
-        var targetUser = userRepository.findUserByUsername(username)
+    public ProfileDto getProfileFromUsername(JwtAuthenticationToken jwtToken, String targetUsername) {
+        var targetUser = userRepository.findUserByUsername(targetUsername)
                 .orElseThrow(NoSuchElementException::new);
         // TODO - Use ResponseEntity in controller to give better error message and status code rather than 500.
         if (jwtToken == null) {
@@ -32,10 +32,10 @@ public class ProfileService {
     }
 
     @Transactional
-    public ProfileDto followProfile(JwtAuthenticationToken jwtToken, String username) {
+    public ProfileDto followProfile(JwtAuthenticationToken jwtToken, String targetUsername) {
         var currentUser = userRepository.findUserById(Integer.parseInt(jwtToken.getName()))
                 .orElseThrow(NoSuchElementException::new);
-        var targetUser = userRepository.findUserByUsername(username)
+        var targetUser = userRepository.findUserByUsername(targetUsername)
                 .orElseThrow(NoSuchElementException::new);
 
         userRepository.save(currentUser.followUser(targetUser));
@@ -43,10 +43,10 @@ public class ProfileService {
     }
 
     @Transactional
-    public ProfileDto unfollowProfile(JwtAuthenticationToken jwtToken, String username) {
+    public ProfileDto unfollowProfile(JwtAuthenticationToken jwtToken, String targetUsername) {
         var currentUser = userRepository.findUserById(Integer.parseInt(jwtToken.getName()))
                 .orElseThrow(NoSuchElementException::new);
-        var targetUser = userRepository.findUserByUsername(username)
+        var targetUser = userRepository.findUserByUsername(targetUsername)
                 .orElseThrow(NoSuchElementException::new);
 
         userRepository.save(currentUser.unfollowUser(targetUser));

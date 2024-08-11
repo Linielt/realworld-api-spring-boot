@@ -23,7 +23,7 @@ public class ProfileRestController {
         return profileService.followProfile(jwtToken, username);
     }
 
-    @DeleteMapping("/profiles/{username}/unfollow")
+    @DeleteMapping("/profiles/{username}/follow")
     public ProfileDto unfollowUser(JwtAuthenticationToken jwtToken, @PathVariable String username) {
         return profileService.unfollowProfile(jwtToken, username);
     }

@@ -37,9 +37,10 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/users/login").permitAll()
+                                .requestMatchers(HttpMethod.POST ,"/users/login").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                                .requestMatchers("/profiles/{username}").permitAll()
+                                .requestMatchers(HttpMethod.GET ,"/profiles/{username}").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/articles/{slug}").permitAll()
                                 .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

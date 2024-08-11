@@ -3,7 +3,6 @@ package com.linielt.realworldapispringboot.dtos;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.linielt.realworldapispringboot.model.User;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 @JsonTypeName("user")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)

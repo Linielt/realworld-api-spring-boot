@@ -6,7 +6,7 @@ import com.linielt.realworldapispringboot.model.User;
 
 @JsonTypeName("profile")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
-public class ProfileDto { // TODO - Might be repeating myself, will later check if this class is necessary.
+public class ProfileDto {
 
     private String username;
     private String bio;
@@ -23,6 +23,10 @@ public class ProfileDto { // TODO - Might be repeating myself, will later check 
 
     public static ProfileDto fromUser(User user, boolean following) {
         return new ProfileDto(user.getUsername(), user.getBio(), user.getImage(), following);
+    }
+
+    public static ProfileDto fromUser(User user) {
+        return new ProfileDto(user.getUsername(), user.getBio(), user.getImage(), false);
     }
 
     public String getUsername() {
@@ -55,5 +59,45 @@ public class ProfileDto { // TODO - Might be repeating myself, will later check 
 
     public void setFollowing(boolean following) {
         this.following = following;
+    }
+
+    public static class NestedProfileDto {
+        private String username;
+        private String bio;
+        private String image;
+        private boolean following;
+
+        protected NestedProfileDto() {}
+
+        public static NestedProfileDto fromProfileDTO(ProfileDto profile, boolean isFollowing) {
+            return new NestedProfileDto(profile.getUsername(), profile.getBio(), profile.getImage(), isFollowing);
+        }
+
+        public static NestedProfileDto fromProfileDTO(ProfileDto profile) {
+            return new NestedProfileDto(profile.getUsername(), profile.getBio(), profile.getImage(), false);
+        }
+
+        private NestedProfileDto(String username, String bio, String image, boolean following) {
+            this.username = username;
+            this.bio = bio;
+            this.image = image;
+            this.following = following;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public String getBio() {
+            return bio;
+        }
+
+        public String getImage() {
+            return image;
+        }
+
+        public boolean isFollowing() {
+            return following;
+        }
     }
 }

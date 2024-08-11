@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.linielt.realworldapispringboot.model.Article;
 import com.linielt.realworldapispringboot.dtos.ProfileDto.NestedProfileDto;
+import com.linielt.realworldapispringboot.model.User;
 
 import java.time.Instant;
 
@@ -30,6 +31,19 @@ public class ArticleDto {
                 article.getTagsAsStringArray(),
                 article.getCreatedAt(),
                 article.getUpdatedAt());
+        dto.setFavoritesCount(article.getFavorites().size());
+        dto.setAuthor(NestedProfileDto.fromProfileDTO(ProfileDto.fromUser(article.getAuthor())));
+
+        return dto;
+    }
+
+    public static ArticleDto fromArticleAndCurrentUserToDto(Article article, User user) {
+        ArticleDto dto = new ArticleDto(article.getSlug(), article.getTitle(), article.getDescription(),
+                article.getBody(),
+                article.getTagsAsStringArray(),
+                article.getCreatedAt(),
+                article.getUpdatedAt());
+        dto.setFavorited(article.getFavorites().contains(user));
         dto.setFavoritesCount(article.getFavorites().size());
         dto.setAuthor(NestedProfileDto.fromProfileDTO(ProfileDto.fromUser(article.getAuthor())));
 

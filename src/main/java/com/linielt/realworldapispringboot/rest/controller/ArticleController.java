@@ -1,7 +1,6 @@
 package com.linielt.realworldapispringboot.rest.controller;
 
 import com.linielt.realworldapispringboot.dtos.ArticleDto;
-import com.linielt.realworldapispringboot.model.Article;
 import com.linielt.realworldapispringboot.request.ArticleCreationRequest;
 import com.linielt.realworldapispringboot.service.ArticleService;
 import com.linielt.realworldapispringboot.service.UserService;
@@ -21,13 +20,11 @@ public class ArticleController {
 
     @GetMapping("/articles/{slug}")
     public ArticleDto getArticleFromSlug(JwtAuthenticationToken jwtToken, @PathVariable String slug) {
-        Article article = articleService.getArticleFromSlug(slug);
-        ArticleDto dto = ArticleDto.fromArticleToDto(article);
-        if (jwtToken != null) {
-            dto.setFavorited(article.getFavorites().contains(userService.getUserByToken(jwtToken)));
+        if (jwtToken == null) {
+            return ArticleDto.fromArticleToDto(articleService.getArticleFromSlug(slug));
         }
 
-        return dto;
+        return ArticleDto.fromArticleAndCurrentUserToDto(articleService.getArticleFromSlug(slug), userService.getUserByToken(jwtToken));
     }
 
     @PostMapping("/articles")

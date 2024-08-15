@@ -65,6 +65,7 @@ public class ArticleService {
         return articleRepository.save(articleToEdit);
     }
 
+    @Transactional
     public void deleteArticle(User user, String slug) {
         Article articleToDelete = articleRepository.findArticleBySlug(slug)
                 .orElseThrow(() -> new NoSuchElementException("Article not found."));

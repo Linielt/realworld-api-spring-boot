@@ -16,6 +16,7 @@ public class ProfileService {
         this.userRepository = userRepository;
     }
 
+    @Transactional(readOnly = true)
     public ProfileDto getProfile(User targetUser) {
         return ProfileDto.fromUser(targetUser);
     }

@@ -11,11 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProfileService {
 
     private final UserRepository userRepository;
-    private final UserService userService;
 
-    public ProfileService(UserRepository userRepository, UserService userService) {
+    public ProfileService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.userService = userService;
     }
 
     public ProfileDto getProfile(User targetUser) {
@@ -23,17 +21,13 @@ public class ProfileService {
     }
 
     @Transactional
-    public ProfileDto followProfile(JwtAuthenticationToken jwtToken, User targetUser) {
-        var currentUser = userService.getUserByToken(jwtToken);
-
+    public ProfileDto followProfile(User currentUser, User targetUser) {
         userRepository.save(currentUser.followUser(targetUser));
         return ProfileDto.fromUser(targetUser, currentUser.isFollowing(targetUser));
     }
 
     @Transactional
-    public ProfileDto unfollowProfile(JwtAuthenticationToken jwtToken, User targetUser) {
-        var currentUser = userService.getUserByToken(jwtToken);
-
+    public ProfileDto unfollowProfile(User currentUser, User targetUser) {
         userRepository.save(currentUser.unfollowUser(targetUser));
         return ProfileDto.fromUser(targetUser, currentUser.isFollowing(targetUser));
     }

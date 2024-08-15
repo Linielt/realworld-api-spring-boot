@@ -47,10 +47,7 @@ public class UserService {
     }
 
     // TODO - Allow for user to set fields to null
-    public User updateCurrentUser(JwtAuthenticationToken jwtToken, UserUpdateRequest updateRequest) {
-        var currentUser = repository.findUserById(Integer.parseInt(jwtToken.getName()))
-                .orElseThrow(NoSuchElementException::new);
-
+    public User updateCurrentUser(User currentUser, UserUpdateRequest updateRequest) {
         if (updateRequest.email() != null && !updateRequest.email().isEmpty()) {
             currentUser.setEmail(updateRequest.email());
         }

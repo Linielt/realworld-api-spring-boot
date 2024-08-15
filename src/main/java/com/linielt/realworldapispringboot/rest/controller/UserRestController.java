@@ -1,6 +1,7 @@
 package com.linielt.realworldapispringboot.rest.controller;
 
 import com.linielt.realworldapispringboot.dtos.UserDto;
+import com.linielt.realworldapispringboot.model.User;
 import com.linielt.realworldapispringboot.request.UserLoginRequest;
 import com.linielt.realworldapispringboot.request.UserRegistrationRequest;
 import com.linielt.realworldapispringboot.request.UserUpdateRequest;
@@ -44,7 +45,9 @@ public class UserRestController {
 
     @PatchMapping("/user")
     public UserDto updateCurrentUser(JwtAuthenticationToken jwtToken, @RequestBody UserUpdateRequest updateRequest) {
-        var updatedUser = userService.updateCurrentUser(jwtToken, updateRequest);
+        User currentUser = userService.getUserByToken(jwtToken);
+
+        var updatedUser = userService.updateCurrentUser(currentUser, updateRequest);
         return UserDto.fromUserAndTokenValueToDto(updatedUser, jwtToken.getToken().getTokenValue());
     }
 }

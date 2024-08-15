@@ -26,22 +26,25 @@ public class ProfileRestController {
             return dto;
         }
 
-        dto.setFollowing(userService.getUserByToken(jwtToken).isFollowing(targetUser));
+        User currentUser = userService.getUserByToken(jwtToken);
+        dto.setFollowing(currentUser.isFollowing(targetUser));
 
         return dto;
     }
 
     @PostMapping("/profiles/{username}/follow")
     public ProfileDto followProfile(JwtAuthenticationToken jwtToken, @PathVariable String username) {
+        User currentUser = userService.getUserByToken(jwtToken);
         User targetUser = userService.getUserByUsername(username);
 
-        return profileService.followProfile(jwtToken, targetUser);
+        return profileService.followProfile(currentUser, targetUser);
     }
 
     @DeleteMapping("/profiles/{username}/follow")
     public ProfileDto unfollowUser(JwtAuthenticationToken jwtToken, @PathVariable String username) {
+        User currentUser = userService.getUserByToken(jwtToken);
         User targetUser = userService.getUserByUsername(username);
 
-        return profileService.unfollowProfile(jwtToken, targetUser);
+        return profileService.unfollowProfile(currentUser, targetUser);
     }
 }

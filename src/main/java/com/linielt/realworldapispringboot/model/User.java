@@ -91,10 +91,6 @@ public class User {
         this.image = image;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public boolean isFollowing(User user) {
         return this.followedUsers.contains(user);
     }

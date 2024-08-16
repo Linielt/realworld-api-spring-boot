@@ -6,9 +6,13 @@ import com.linielt.realworldapispringboot.model.User;
 import com.linielt.realworldapispringboot.repository.ArticleRepository;
 import com.linielt.realworldapispringboot.request.ArticleCreationRequest;
 import com.linielt.realworldapispringboot.request.ArticleEditRequest;
+import com.linielt.realworldapispringboot.request.OffsetBasedPageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -19,6 +23,34 @@ public class ArticleService {
     public ArticleService(TagService tagService, ArticleRepository articleRepository) {
         this.tagService = tagService;
         this.articleRepository = articleRepository;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Article> getListOfArticlesFromParameters(String tag, String author, String userFavorited, int limit, int offset) {
+        Pageable sortedByCreationTime = new OffsetBasedPageRequest(offset, limit, Sort.by("createdAt").descending());
+
+        List<Article> articles = articleRepository.findAll(sortedByCreationTime).stream().toList();
+
+        if (tag != null) {
+            articles = articles.stream().filter(article -> article.getTagsAsStringList().contains(tag)).toList();
+        }
+        if (author != null) {
+            articles = articles.stream().filter(article -> article.getAuthor().getUsername().equals(author)).toList();
+        }
+        if (userFavorited != null) {
+            articles = articles.stream().filter(article -> article.getUsernamesOfFavorites().contains(userFavorited)).toList();
+        }
+
+        return articles;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Article> getArticlesFeed(User currentUser, int limit, int offset) {
+        Pageable pageable = new OffsetBasedPageRequest(offset, limit, Sort.by("createdAt").descending());
+
+        return articleRepository.findAllByAuthorIsIn(currentUser.getFollowedUsers(),pageable).stream()
+                .filter(article -> currentUser.isFollowing(article.getAuthor()))
+                .toList();
     }
 
     @Transactional(readOnly = true)

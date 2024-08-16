@@ -8,6 +8,7 @@ import com.linielt.realworldapispringboot.dtos.ProfileDto.NestedProfileDto;
 import com.linielt.realworldapispringboot.model.User;
 
 import java.time.Instant;
+import java.util.List;
 
 @JsonTypeName("author")
 @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
@@ -17,7 +18,7 @@ public class ArticleDto {
     private String title;
     private String description;
     private String body;
-    private String[] tagList;
+    private List<String> tagList;
     private Instant createdAt;
     private Instant updatedAt;
     private boolean favorited;
@@ -28,7 +29,7 @@ public class ArticleDto {
     public static ArticleDto fromArticleToDto(Article article) {
         ArticleDto dto = new ArticleDto(article.getSlug(), article.getTitle(), article.getDescription(),
                 article.getBody(),
-                article.getTagsAsStringArray(),
+                article.getTagsAsStringList(),
                 article.getCreatedAt(),
                 article.getUpdatedAt());
         dto.setFavoritesCount(article.getUserFavorites().size());
@@ -37,20 +38,24 @@ public class ArticleDto {
         return dto;
     }
 
-    public static ArticleDto fromArticleAndCurrentUserToDto(Article article, User user) {
+    public static ArticleDto fromArticleAndCurrentUserToDto(Article article, User currentUser) {
         ArticleDto dto = new ArticleDto(article.getSlug(), article.getTitle(), article.getDescription(),
                 article.getBody(),
-                article.getTagsAsStringArray(),
+                article.getTagsAsStringList(),
                 article.getCreatedAt(),
                 article.getUpdatedAt());
-        dto.setFavorited(article.getUserFavorites().contains(user));
+        dto.setFavorited(article.getUserFavorites().contains(currentUser));
         dto.setFavoritesCount(article.getUserFavorites().size());
-        dto.setAuthor(NestedProfileDto.fromProfileDTO(ProfileDto.fromUser(article.getAuthor())));
+        dto.setAuthor(NestedProfileDto.fromProfileDTO(
+                ProfileDto.fromUser(article.getAuthor()),
+                currentUser.isFollowing(article.getAuthor())
+        )
+        );
 
         return dto;
     }
 
-    private ArticleDto(String slug, String title, String description, String body, String[] tagList, Instant createdAt, Instant updatedAt) {
+    private ArticleDto(String slug, String title, String description, String body, List<String> tagList, Instant createdAt, Instant updatedAt) {
         this.slug = slug;
         this.title = title;
         this.description = description;
@@ -92,11 +97,11 @@ public class ArticleDto {
         this.body = body;
     }
 
-    public String[] getTagList() {
+    public List<String> getTagList() {
         return tagList;
     }
 
-    public void setTagList(String[] tagList) {
+    public void setTagList(List<String> tagList) {
         this.tagList = tagList;
     }
 

@@ -98,6 +98,10 @@ public class User {
         return this.followedUsers.contains(user);
     }
 
+    public Set<User> getFollowedUsers() {
+        return followedUsers;
+    }
+
     public User followUser(User user) {
         followedUsers.add(user);
         return this;

@@ -5,6 +5,7 @@ import com.linielt.realworldapispringboot.model.Article;
 import com.linielt.realworldapispringboot.model.User;
 import com.linielt.realworldapispringboot.request.ArticleCreationRequest;
 import com.linielt.realworldapispringboot.request.ArticleEditRequest;
+import com.linielt.realworldapispringboot.response.ListOfArticlesResponse;
 import com.linielt.realworldapispringboot.service.ArticleService;
 import com.linielt.realworldapispringboot.service.UserService;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -19,6 +20,43 @@ public class ArticleController {
     public ArticleController(ArticleService articleService, UserService userService) {
         this.articleService = articleService;
         this.userService = userService;
+    }
+
+    @GetMapping("/articles")
+    public ListOfArticlesResponse getListOfArticles(JwtAuthenticationToken jwtToken,
+                                                    @RequestParam(required = false) String tag,
+                                                    @RequestParam(required = false) String author,
+                                                    @RequestParam(required = false) String user,
+                                                    @RequestParam(required = false, defaultValue = "20") int limit,
+                                                    @RequestParam(required = false, defaultValue = "0") int offset) {
+        if (jwtToken == null) {
+            return new ListOfArticlesResponse(
+                    articleService.getListOfArticlesFromParameters(tag, author, user, limit, offset).stream()
+                            .map(ArticleDto::fromArticleToDto)
+                            .toList()
+            );
+        }
+
+        User currentUser = userService.getUserByToken(jwtToken);
+
+        return new ListOfArticlesResponse(
+                articleService.getListOfArticlesFromParameters(tag, author, user, limit, offset).stream()
+                        .map(article -> ArticleDto.fromArticleAndCurrentUserToDto(article, currentUser))
+                        .toList()
+        );
+    }
+
+    @GetMapping("/articles/feed")
+    public ListOfArticlesResponse getArticlesFeed(JwtAuthenticationToken jwtToken,
+                                            @RequestParam(required = false, defaultValue = "20") int limit,
+                                            @RequestParam(required = false, defaultValue = "0") int offset) {
+        User currentUser = userService.getUserByToken(jwtToken);
+
+        return new ListOfArticlesResponse(
+                articleService.getArticlesFeed(currentUser, limit, offset).stream()
+                        .map(article -> ArticleDto.fromArticleAndCurrentUserToDto(article, currentUser))
+                        .toList()
+        );
     }
 
     @GetMapping("/articles/{slug}")

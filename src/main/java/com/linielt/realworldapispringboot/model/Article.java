@@ -5,9 +5,7 @@ import com.linielt.realworldapispringboot.request.ArticleCreationRequest;
 import jakarta.persistence.*;
 
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Table(name = "articles")
 @Entity
@@ -105,13 +103,11 @@ public class Article {
         return tags;
     }
 
-    public String[] getTagsAsStringArray() {
-        int counter = 0;
-        String[] tagsAsStrings = new String[tags.size()];
+    public List<String> getTagsAsStringList() {
+        List<String> tagsAsStrings = new ArrayList<>();
 
         for (Tag tag : this.tags) {
-            tagsAsStrings[counter] = tag.getValue();
-            counter++;
+            tagsAsStrings.add(tag.getValue());
         }
 
         return tagsAsStrings;
@@ -139,6 +135,15 @@ public class Article {
 
     public Set<User> getUserFavorites() {
         return userFavorites;
+    }
+    public List<String> getUsernamesOfFavorites() {
+        List<String> usernames = new ArrayList<>();
+
+        for (User user : this.userFavorites) {
+            usernames.add(user.getUsername());
+        }
+
+        return usernames;
     }
 
     public void setUserFavorites(Set<User> userFavorites) {

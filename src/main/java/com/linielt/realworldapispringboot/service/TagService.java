@@ -19,7 +19,7 @@ public class TagService {
     }
 
     @Transactional
-    public Set<Tag> loadTagsIfPresent(String[] tagValues) {
+    public Set<Tag> loadTagsIfPresent(List<String> tagValues) {
         Set<Tag> tags = new HashSet<>();
         for (String tagValue : tagValues) {
             if (tagRepository.existsTagByValue(tagValue)) {

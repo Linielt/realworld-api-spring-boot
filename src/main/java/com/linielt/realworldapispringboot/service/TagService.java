@@ -3,6 +3,7 @@ package com.linielt.realworldapispringboot.service;
 import com.linielt.realworldapispringboot.model.Tag;
 import com.linielt.realworldapispringboot.repository.TagRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +17,7 @@ public class TagService {
         this.tagRepository = tagRepository;
     }
 
+    @Transactional
     public Set<Tag> loadTagsIfPresent(String[] tagValues) {
         Set<Tag> tags = new HashSet<>();
         for (String tagValue : tagValues) {

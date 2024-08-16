@@ -55,4 +55,13 @@ public class CommentController {
                 .map(comment -> NestedCommentDto.fromCommentAndCurrentUser(comment, currentUser))
                 .toList());
     }
+
+    @DeleteMapping("/articles/{slug}/comments/{id}")
+    public void deleteComment(JwtAuthenticationToken jwtToken, @PathVariable String slug, @PathVariable int id) {
+        User currentUser = userService.getUserByToken(jwtToken);
+        Article article = articleService.getArticleFromSlug(slug);
+        Comment comment = commentService.getCommentFromId(id);
+
+        commentService.deleteComment(currentUser, article, comment);
+    }
 }

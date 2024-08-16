@@ -30,6 +30,9 @@ public class User {
     @OneToMany(cascade = CascadeType.REMOVE)
     private Set<User> followedUsers = new HashSet<>();
 
+    @ManyToMany(mappedBy = "userFavorites")
+    private Set<Article> favoritedArticles = new HashSet<>();
+
     protected User() {}
 
     private User(String username, String email, String encodedPassword) {
@@ -103,6 +106,16 @@ public class User {
     public User unfollowUser(User user) {
         followedUsers.remove(user);
         return user;
+    }
+
+    public Article favoriteArticle(Article article) {
+        favoritedArticles.add(article);
+        return article.addUserToFavorites(this);
+    }
+
+    public Article unfavoriteArticle(Article article) {
+        favoritedArticles.remove(article);
+        return article.removeUserFromFavorites(this);
     }
 
     @Override

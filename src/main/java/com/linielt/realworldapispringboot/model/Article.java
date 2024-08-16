@@ -41,8 +41,8 @@ public class Article {
             joinColumns = @JoinColumn(name = "article_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
     )
-    @OneToMany(cascade = CascadeType.REMOVE)
-    private Set<User> favorites = new HashSet<>();
+    @ManyToMany(cascade = CascadeType.REMOVE)
+    private Set<User> userFavorites = new HashSet<>();
 
     @JoinColumn(name = "author_id", referencedColumnName = "id")
     @ManyToOne
@@ -137,12 +137,22 @@ public class Article {
         this.updatedAt = updatedAt;
     }
 
-    public Set<User> getFavorites() {
-        return favorites;
+    public Set<User> getUserFavorites() {
+        return userFavorites;
     }
 
-    public void setFavorites(Set<User> favorites) {
-        this.favorites = favorites;
+    public void setUserFavorites(Set<User> userFavorites) {
+        this.userFavorites = userFavorites;
+    }
+
+    public Article addUserToFavorites(User user) {
+        this.userFavorites.add(user);
+        return this;
+    }
+
+    public Article removeUserFromFavorites(User user) {
+        this.userFavorites.remove(user);
+        return this;
     }
 
     public User getAuthor() {

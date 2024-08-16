@@ -31,7 +31,7 @@ public class ArticleDto {
                 article.getTagsAsStringArray(),
                 article.getCreatedAt(),
                 article.getUpdatedAt());
-        dto.setFavoritesCount(article.getFavorites().size());
+        dto.setFavoritesCount(article.getUserFavorites().size());
         dto.setAuthor(NestedProfileDto.fromProfileDTO(ProfileDto.fromUser(article.getAuthor())));
 
         return dto;
@@ -43,8 +43,8 @@ public class ArticleDto {
                 article.getTagsAsStringArray(),
                 article.getCreatedAt(),
                 article.getUpdatedAt());
-        dto.setFavorited(article.getFavorites().contains(user));
-        dto.setFavoritesCount(article.getFavorites().size());
+        dto.setFavorited(article.getUserFavorites().contains(user));
+        dto.setFavoritesCount(article.getUserFavorites().size());
         dto.setAuthor(NestedProfileDto.fromProfileDTO(ProfileDto.fromUser(article.getAuthor())));
 
         return dto;

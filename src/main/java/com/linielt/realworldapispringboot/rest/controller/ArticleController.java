@@ -1,6 +1,7 @@
 package com.linielt.realworldapispringboot.rest.controller;
 
 import com.linielt.realworldapispringboot.dtos.ArticleDto;
+import com.linielt.realworldapispringboot.model.Article;
 import com.linielt.realworldapispringboot.model.User;
 import com.linielt.realworldapispringboot.request.ArticleCreationRequest;
 import com.linielt.realworldapispringboot.request.ArticleEditRequest;
@@ -51,7 +52,24 @@ public class ArticleController {
     @DeleteMapping("/articles/{slug}")
     public void deleteArticle(JwtAuthenticationToken jwtToken, @PathVariable String slug) {
         User currentUser = userService.getUserByToken(jwtToken);
+        Article article = articleService.getArticleFromSlug(slug);
 
-        articleService.deleteArticle(currentUser, slug);
+        articleService.deleteArticle(currentUser, article);
+    }
+
+    @PostMapping("/articles/{slug}/favorite")
+    public ArticleDto favoriteArticle(JwtAuthenticationToken jwtToken, @PathVariable String slug) {
+        User currentUser = userService.getUserByToken(jwtToken);
+        Article article = articleService.getArticleFromSlug(slug);
+
+        return ArticleDto.fromArticleAndCurrentUserToDto(articleService.favoriteArticle(currentUser, article), currentUser);
+    }
+
+    @DeleteMapping("/articles/{slug}/favorite")
+    public ArticleDto unfavoriteArticle(JwtAuthenticationToken jwtToken, @PathVariable String slug) {
+        User currentUser = userService.getUserByToken(jwtToken);
+        Article article = articleService.getArticleFromSlug(slug);
+
+        return ArticleDto.fromArticleToDto(articleService.unfavoriteArticle(currentUser, article));
     }
 }

@@ -6,7 +6,6 @@ import com.linielt.realworldapispringboot.model.User;
 import com.linielt.realworldapispringboot.repository.ArticleRepository;
 import com.linielt.realworldapispringboot.request.ArticleCreationRequest;
 import com.linielt.realworldapispringboot.request.ArticleEditRequest;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,12 +13,10 @@ import java.util.NoSuchElementException;
 
 @Service
 public class ArticleService {
-    private final UserService userService; // TODO - Consider if having services depending on other services is a bad idea.
-    private final TagService tagService;
+    private final TagService tagService; // TODO - Consider how to remove this dependency
     private final ArticleRepository articleRepository;
 
-    public ArticleService(UserService userService, TagService tagService, ArticleRepository articleRepository) {
-        this.userService = userService;
+    public ArticleService(TagService tagService, ArticleRepository articleRepository) {
         this.tagService = tagService;
         this.articleRepository = articleRepository;
     }
@@ -66,14 +63,21 @@ public class ArticleService {
     }
 
     @Transactional
-    public void deleteArticle(User user, String slug) {
-        Article articleToDelete = articleRepository.findArticleBySlug(slug)
-                .orElseThrow(() -> new NoSuchElementException("Article not found."));
-
-        if (articleToDelete.getAuthor().equals(user)) {
+    public void deleteArticle(User currentUser, Article articleToDelete) {
+        if (articleToDelete.getAuthor().equals(currentUser)) {
             throw new IllegalArgumentException("You cannot delete the articles of other users.");
         }
 
         articleRepository.delete(articleToDelete);
+    }
+
+    @Transactional
+    public Article favoriteArticle(User currentUser, Article article) {
+        return articleRepository.save(currentUser.favoriteArticle(article));
+    }
+
+    @Transactional
+    public Article unfavoriteArticle(User currentUser, Article article) {
+        return articleRepository.save(currentUser.unfavoriteArticle(article));
     }
 }

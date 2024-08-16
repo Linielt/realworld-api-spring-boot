@@ -77,6 +77,13 @@ public class ProfileDto {
             return new NestedProfileDto(profile.getUsername(), profile.getBio(), profile.getImage(), false);
         }
 
+        public static NestedProfileDto fromUser(User user) {
+            return new NestedProfileDto(user.getUsername(),
+                    user.getBio(),
+                    user.getImage(),
+                    false);
+        }
+
         private NestedProfileDto(String username, String bio, String image, boolean following) {
             this.username = username;
             this.bio = bio;
@@ -98,6 +105,22 @@ public class ProfileDto {
 
         public boolean isFollowing() {
             return following;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public void setBio(String bio) {
+            this.bio = bio;
+        }
+
+        public void setImage(String image) {
+            this.image = image;
+        }
+
+        public void setFollowing(boolean following) {
+            this.following = following;
         }
     }
 }

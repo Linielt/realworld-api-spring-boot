@@ -41,6 +41,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                                 .requestMatchers(HttpMethod.GET ,"/profiles/{username}").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/articles/{slug}").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/articles/{slug}/comments").permitAll()
                                 .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

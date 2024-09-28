@@ -38,16 +38,16 @@ public class UserRestController {
     }
 
     @GetMapping("/user")
-    public UserDto getCurrentUser(JwtAuthenticationToken jwtToken) {
+    public ResponseEntity<UserDto> getCurrentUser(JwtAuthenticationToken jwtToken) {
         var currentUser = userService.getUserByToken(jwtToken);
-        return UserDto.fromUserAndTokenValueToDto(currentUser, jwtToken.getToken().getTokenValue());
+        return new ResponseEntity<>(UserDto.fromUserAndTokenValueToDto(currentUser, jwtToken.getToken().getTokenValue()), HttpStatus.OK);
     }
 
     @PatchMapping("/user")
-    public UserDto updateCurrentUser(JwtAuthenticationToken jwtToken, @RequestBody UserUpdateRequest updateRequest) {
+    public ResponseEntity<UserDto> updateCurrentUser(JwtAuthenticationToken jwtToken, @RequestBody UserUpdateRequest updateRequest) {
         User currentUser = userService.getUserByToken(jwtToken);
 
         var updatedUser = userService.updateCurrentUser(currentUser, updateRequest);
-        return UserDto.fromUserAndTokenValueToDto(updatedUser, jwtToken.getToken().getTokenValue());
+        return new ResponseEntity<>(UserDto.fromUserAndTokenValueToDto(updatedUser, jwtToken.getToken().getTokenValue()), HttpStatus.OK);
     }
 }

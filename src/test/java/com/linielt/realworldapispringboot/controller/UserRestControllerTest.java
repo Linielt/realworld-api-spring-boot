@@ -28,6 +28,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -102,7 +103,7 @@ public class UserRestControllerTest {
         when(userService.getUserByToken(any(JwtAuthenticationToken.class))).thenReturn(testUser);
 
         mockMvc.perform(get("/user")
-                .with(SecurityMockMvcRequestPostProcessors.jwt()))
+                .with(jwt()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.user.username", is(testUser.getUsername())))
                 .andExpect(jsonPath("$.user.email", is(testUser.getEmail())))
@@ -113,12 +114,12 @@ public class UserRestControllerTest {
     @Test
     void updateCurrentUserTest() throws Exception {
         when(userService.getUserByToken(any(JwtAuthenticationToken.class))).thenReturn(testUser);
-        when(userService.updateCurrentUser(any(User.class), any(UserUpdateRequest.class))).thenReturn(testUpdatedUser);
+        when(userService.updateCurrentUser(testUser, createUserUpdateRequest())).thenReturn(testUpdatedUser);
 
         mockMvc.perform(patch("/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createUserUpdateRequest()))
-                .with(SecurityMockMvcRequestPostProcessors.jwt()))
+                .with(jwt()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.user.username", is(testUpdatedUser.getUsername())))
                 .andExpect(jsonPath("$.user.email", is(testUpdatedUser.getEmail())))

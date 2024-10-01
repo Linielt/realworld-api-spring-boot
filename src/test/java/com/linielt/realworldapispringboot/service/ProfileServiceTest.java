@@ -40,7 +40,7 @@ public class ProfileServiceTest {
 
     @Test
     void testFollowUser() {
-        when(userRepository.save(any(User.class))).thenReturn(followingUser);
+        when(userRepository.save(followingUser)).thenReturn(followingUser);
         User followingUser = User.createUser("following", "following@following.follow", "following");
         User followedUser = User.createUser("followed", "followed@followed.follow", "followed");
 
@@ -52,7 +52,7 @@ public class ProfileServiceTest {
 
     @Test
     void testUnfollowUser() {
-        when(userRepository.save(any(User.class))).thenReturn(followingUser);
+        when(userRepository.save(followingUser)).thenReturn(followingUser);
         User followingUser = User.createUser("following", "following@following.follow", "following");
         User followedUser = User.createUser("followed", "followed@followed.follow", "followed");
 

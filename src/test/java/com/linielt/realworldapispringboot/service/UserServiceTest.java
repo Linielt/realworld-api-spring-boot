@@ -5,6 +5,7 @@ import com.linielt.realworldapispringboot.repository.UserRepository;
 import com.linielt.realworldapispringboot.request.UserLoginRequest;
 import com.linielt.realworldapispringboot.request.UserRegistrationRequest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -46,8 +47,9 @@ public class UserServiceTest {
     }
 
     @Test
+    @DisplayName("When invoked with correct user details, returned User is not null and has the same email")
     void loginWithCorrectCredentialsTest() {
-        when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.of(testUser));
+        when(userRepository.findUserByEmail(testUser.getEmail())).thenReturn(Optional.of(testUser));
 
         var userToLogin = userService.login(testLoginRequest.getEmail(), testLoginRequest.getPassword());
 
@@ -58,7 +60,7 @@ public class UserServiceTest {
     @Test
     void loginWithIncorrectCredentialsTest() {
         UserLoginRequest loginRequestWithWrongPassword = new UserLoginRequest("jake@jake.jake", "wrong");
-        when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.of(testUser));
+        when(userRepository.findUserByEmail(testUser.getEmail())).thenReturn(Optional.of(testUser));
 
         assertThatExceptionOfType(BadCredentialsException.class)
                 .isThrownBy(() -> userService.login
@@ -67,19 +69,19 @@ public class UserServiceTest {
 
     @Test
     void registerUserTest() {
-        when(userRepository.save(any(User.class))).thenReturn(testUser);
+        when(userRepository.save(testUser)).thenReturn(testUser);
         var userToRegister = userService.register(testRegistrationRequest);
 
         assertThat(userToRegister.getId()).isNotNull();
         assertThat(userToRegister.getPassword()).isNotBlank();
         assertThat(userToRegister.getUsername()).isEqualTo(testUser.getUsername());
-        assertThat(userToRegister.getBio()).isNull();
-        assertThat(userToRegister.getImage()).isNull();
+        assertThat(userToRegister.getBio()).isEqualTo(testUser.getBio());
+        assertThat(userToRegister.getImage()).isEqualTo(testUser.getImage());
     }
 
     @Test
     void getUserByUsernameWithExistingUsernameTest() {
-        when(userRepository.findUserByUsername(anyString())).thenReturn(Optional.of(testUser));
+        when(userRepository.findUserByUsername(testUser.getUsername())).thenReturn(Optional.of(testUser));
 
         var userToGet = userService.getUserByUsername("Jacob");
 
@@ -88,7 +90,7 @@ public class UserServiceTest {
 
     @Test
     void getUserWithNonExistingUsernameTest() {
-        when(userRepository.findUserByUsername(anyString())).thenReturn(Optional.empty());
+        when(userRepository.findUserByUsername(testUser.getUsername())).thenReturn(Optional.of(testUser));
 
         assertThatExceptionOfType(NoSuchElementException.class)
                 .isThrownBy(() -> userService.getUserByUsername("someNonExistantUser"));

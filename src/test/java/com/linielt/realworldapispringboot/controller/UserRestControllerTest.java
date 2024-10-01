@@ -9,6 +9,7 @@ import com.linielt.realworldapispringboot.security.SecurityConfig;
 import com.linielt.realworldapispringboot.service.JwtTokenProviderService;
 import com.linielt.realworldapispringboot.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -33,7 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(UserRestController.class)
 @Import(SecurityConfig.class)
 public class UserRestControllerTest {
-    // Call the login endpoint before every authenticated endpoint, extract token, use it in request heading
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -55,14 +56,45 @@ public class UserRestControllerTest {
     }
 
     @Test
+    @DisplayName("When invoked with valid response body and valid user details, return full user details and 200 response code")
     void testLogin() throws Exception {
-        when(userService.login(any(UserLoginRequest.class))).thenReturn(testUser);
+        when(userService.login
+                (createTestUserLoginRequest().getEmail(), createTestUserLoginRequest().getPassword())).thenReturn(testUser);
 
         mockMvc.perform(post("/users/login")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createTestUserLoginRequest())))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.user.username", is(testUser.getUsername())))
+                .andExpect(jsonPath("$.user.email", is(testUser.getEmail())))
+                .andExpect(jsonPath("$.user.image", is(testUser.getImage())))
+                .andExpect(jsonPath("$.user.bio", is(testUser.getBio())));
+    }
+
+    @Test
+    @DisplayName("When invoked with invalid request body, return 403 response code")
+    void testLoginWithInvalidBody() throws Exception {
+        when(userService.login
+                (createTestUserLoginRequest().getEmail(), createTestUserLoginRequest().getPassword())).thenReturn(testUser);
+
+        mockMvc.perform(post("/users/login")
+                        .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString("malformed request")))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void testLoginWithInvalidUserDetails() throws Exception {
+        when(userService.login
+                (createInvalidUserLoginRequest().getEmail(), createInvalidUserLoginRequest().getPassword())).thenThrow(BadCredentialsException.class);
+
+        mockMvc.perform(post("/users/login")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(createInvalidUserLoginRequest())))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -96,6 +128,10 @@ public class UserRestControllerTest {
 
     private UserLoginRequest createTestUserLoginRequest() {
         return new UserLoginRequest("jake@jake.jake", "jakejake");
+    }
+
+    private UserLoginRequest createInvalidUserLoginRequest() {
+        return new UserLoginRequest("fake@fake.fake", "fakefake");
     }
 
     private UserUpdateRequest createUserUpdateRequest() {

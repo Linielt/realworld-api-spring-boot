@@ -25,7 +25,7 @@ public class UserRestController {
 
     @PostMapping("/users/login")
     public ResponseEntity<UserDto> login(@RequestBody UserLoginRequest loginRequest) {
-        var user = userService.login(loginRequest);
+        var user = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
         return new ResponseEntity<>(UserDto.fromUserAndTokenValueToDto(user, tokenProviderService.generateToken(user)),
                 HttpStatus.OK);
     }

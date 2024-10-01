@@ -49,7 +49,7 @@ public class UserServiceTest {
     void loginWithCorrectCredentialsTest() {
         when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.of(testUser));
 
-        var userToLogin = userService.login(testLoginRequest);
+        var userToLogin = userService.login(testLoginRequest.getEmail(), testLoginRequest.getPassword());
 
         assertThat(userToLogin).isNotNull();
         assertThat(userToLogin.getEmail()).isEqualTo(testUser.getEmail());
@@ -61,7 +61,8 @@ public class UserServiceTest {
         when(userRepository.findUserByEmail(anyString())).thenReturn(Optional.of(testUser));
 
         assertThatExceptionOfType(BadCredentialsException.class)
-                .isThrownBy(() -> userService.login(loginRequestWithWrongPassword));
+                .isThrownBy(() -> userService.login
+                        (loginRequestWithWrongPassword.getEmail(), loginRequestWithWrongPassword.getPassword()));
     }
 
     @Test

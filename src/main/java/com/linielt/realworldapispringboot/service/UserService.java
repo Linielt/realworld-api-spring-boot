@@ -2,7 +2,6 @@ package com.linielt.realworldapispringboot.service;
 
 import com.linielt.realworldapispringboot.model.User;
 import com.linielt.realworldapispringboot.repository.UserRepository;
-import com.linielt.realworldapispringboot.request.UserLoginRequest;
 import com.linielt.realworldapispringboot.request.UserRegistrationRequest;
 import com.linielt.realworldapispringboot.request.UserUpdateRequest;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,9 +24,9 @@ public class UserService {
     }
 
     @Transactional
-    public User login(UserLoginRequest loginRequest) {
-        return repository.findUserByEmail(loginRequest.getEmail())
-                .filter(u -> passwordEncoder.matches(loginRequest.getPassword(), u.getPassword()))
+    public User login(String email, String password) {
+        return repository.findUserByEmail(email)
+                .filter(u -> passwordEncoder.matches(password, u.getPassword()))
                 .orElseThrow(() -> new BadCredentialsException("Incorrect email or password."));
     }
 

@@ -15,7 +15,6 @@ import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
-
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
 
@@ -34,8 +33,7 @@ public class UserService {
 
     @Transactional
     public User register(UserRegistrationRequest registrationRequest) {
-        var user = User.fromRegistrationRequest(registrationRequest);
-        user.encryptAndSetPassword(registrationRequest.getPassword(), passwordEncoder);
+        var user = User.fromRegistrationRequest(registrationRequest, passwordEncoder);
         return repository.save(user);
     }
 

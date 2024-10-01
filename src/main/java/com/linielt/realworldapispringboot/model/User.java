@@ -15,10 +15,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(length = 45, nullable = false)
     private String username;
+    @Column(nullable = false)
     private String email;
+    @Column(length = 1000)
     private String bio;
+    @Column(length = 500)
     private String image;
+    @Column(length = 100, nullable = false)
     private String password;
 
     @JoinTable(
@@ -41,9 +46,13 @@ public class User {
         this.password = encodedPassword;
     }
 
-    public static User fromRegistrationRequest(UserRegistrationRequest registrationRequest) {
+    public static User createUser(String username, String email, String encodedPassword) {
+        return new User(username, email, encodedPassword);
+    }
+
+    public static User fromRegistrationRequest(UserRegistrationRequest registrationRequest, PasswordEncoder passwordEncoder) {
         return new User(registrationRequest.getUsername(), registrationRequest.getEmail(),
-                registrationRequest.getPassword());
+                passwordEncoder.encode(registrationRequest.getPassword()));
     }
 
     public void encryptAndSetPassword(String rawPassword, PasswordEncoder passwordEncoder) {

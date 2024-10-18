@@ -21,12 +21,14 @@ For more information on how to this works with other frontends/backends, head ov
 # Getting started
 
 ## Build
-> ./mvnw clean install -U
-
+```
+./mvnw clean install -U
+```
 Follow instructions [here](https://www.danvega.dev/blog/spring-security-jwt#rsa-public-private-keys) to generate public and private keys for signing JWTs.
 
 Add MySQL credentials to env.properties file
-> DB_NAME=your_db_name
-> DB_USER=your_username
-> DB_PASSWORD=your_password
-
+```
+DB_NAME=your_db_name
+DB_USER=your_username
+DB_PASSWORD=your_password
+```

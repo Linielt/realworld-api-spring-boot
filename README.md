@@ -33,6 +33,9 @@ DB_USER=your_username
 DB_PASSWORD=your_password
 ```
 
+## Diagram
+![Database ER diagram](realworld-er-diagram.jpg "ER diagram")
+
 # References
 - [Spring Boot best practices by arsy786](https://github.com/arsy786/springboot-best-practices/tree/master)
 - [How to Secure your REST APIs with Spring Security & JSON Web Tokens (JWTs)](https://www.danvega.dev/blog/spring-security-jwt)

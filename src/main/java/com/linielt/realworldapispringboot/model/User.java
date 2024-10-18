@@ -2,6 +2,7 @@ package com.linielt.realworldapispringboot.model;
 
 import com.linielt.realworldapispringboot.request.UserRegistrationRequest;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashSet;
@@ -16,14 +17,17 @@ public class User {
     private int id;
 
     @Column(length = 45, nullable = false)
+    @NotBlank
     private String username;
     @Column(nullable = false)
+    @NotBlank
     private String email;
     @Column(length = 1000)
     private String bio;
     @Column(length = 500)
     private String image;
     @Column(length = 100, nullable = false)
+    @NotBlank
     private String password;
 
     @JoinTable(

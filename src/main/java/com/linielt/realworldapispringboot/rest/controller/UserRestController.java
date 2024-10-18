@@ -7,6 +7,7 @@ import com.linielt.realworldapispringboot.request.UserRegistrationRequest;
 import com.linielt.realworldapispringboot.request.UserUpdateRequest;
 import com.linielt.realworldapispringboot.service.JwtTokenProviderService;
 import com.linielt.realworldapispringboot.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -24,7 +25,7 @@ public class UserRestController {
     }
 
     @PostMapping("/users/login")
-    public ResponseEntity<UserDto> login(@RequestBody UserLoginRequest loginRequest) {
+    public ResponseEntity<UserDto> login(@Valid @RequestBody UserLoginRequest loginRequest) {
         var user = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
         return new ResponseEntity<>(UserDto.fromUserAndTokenValueToDto(user, tokenProviderService.generateToken(user)),
                 HttpStatus.OK);
@@ -44,7 +45,7 @@ public class UserRestController {
     }
 
     @PatchMapping("/user")
-    public ResponseEntity<UserDto> updateCurrentUser(JwtAuthenticationToken jwtToken, @RequestBody UserUpdateRequest updateRequest) {
+    public ResponseEntity<UserDto> updateCurrentUser(JwtAuthenticationToken jwtToken, @Valid @RequestBody UserUpdateRequest updateRequest) {
         User currentUser = userService.getUserByToken(jwtToken);
 
         var updatedUser = userService.updateCurrentUser(currentUser, updateRequest);

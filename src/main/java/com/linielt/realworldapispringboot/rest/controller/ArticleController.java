@@ -8,13 +8,16 @@ import com.linielt.realworldapispringboot.request.ArticleEditRequest;
 import com.linielt.realworldapispringboot.response.ListOfArticlesResponse;
 import com.linielt.realworldapispringboot.service.ArticleService;
 import com.linielt.realworldapispringboot.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.NoSuchElementException;
 
+@Validated
 @RestController
 public class ArticleController {
 
@@ -85,7 +88,7 @@ public class ArticleController {
     }
 
     @PostMapping("/articles")
-    public ResponseEntity<ArticleDto> createArticle(JwtAuthenticationToken jwtToken, @RequestBody ArticleCreationRequest creationRequest) {
+    public ResponseEntity<ArticleDto> createArticle(JwtAuthenticationToken jwtToken, @RequestBody @Valid ArticleCreationRequest creationRequest) {
         User author = userService.getUserByToken(jwtToken);
 
         return new ResponseEntity<>(ArticleDto.fromArticleToDto(articleService.createArticle(author, creationRequest)),

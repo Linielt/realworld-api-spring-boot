@@ -32,3 +32,9 @@ DB_NAME=your_db_name
 DB_USER=your_username
 DB_PASSWORD=your_password
 ```
+
+# References
+[Spring Boot best practices by arsy786](https://github.com/arsy786/springboot-best-practices/tree/master)
+[How to Secure your REST APIs with Spring Security & JSON Web Tokens (JWTs)](https://www.danvega.dev/blog/spring-security-jwt)
+[OAuth 2.0 and OpenID Connect (in plain English)](https://www.youtube.com/watch?v=996OiexHze0)
+[Introduction to JSON Web Tokens](https://jwt.io/introduction)

@@ -36,6 +36,13 @@ DB_PASSWORD=your_password
 ## Diagram
 ![Database ER diagram](realworld-er-diagram.jpg "ER diagram")
 
+# Improvements to be made
+- Use Lombok to reduce boilerplate code
+- Add Logging
+- Use linting tools for more consistent code formatting
+- Write more tests and include a E2E test
+- Find better ways of dealing with nested DTOs
+
 # References
 - [Spring Boot best practices by arsy786](https://github.com/arsy786/springboot-best-practices/tree/master)
 - [How to Secure your REST APIs with Spring Security & JSON Web Tokens (JWTs)](https://www.danvega.dev/blog/spring-security-jwt)

@@ -42,6 +42,7 @@ DB_PASSWORD=your_password
 - Use linting tools for more consistent code formatting
 - Write more tests and include a E2E test
 - Find better ways of dealing with nested DTOs
+- Make API accept XML
 
 # References
 - [Spring Boot best practices by arsy786](https://github.com/arsy786/springboot-best-practices/tree/master)
